@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration SYSTEM "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.username">lab-2-user</property>
+        <property name="hibernate.connection.password">123456As</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/lab-2</property>
+        <property name="show_sql">true</property>
+        <property name="format_sql">false</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <mapping class="org.evist0.lab2.model.entities.Client"/>
+        <mapping class="org.evist0.lab2.model.entities.Deposit"/>
+        <mapping class="org.evist0.lab2.model.entities.Account"/>
+    </session-factory>
+</hibernate-configuration>
