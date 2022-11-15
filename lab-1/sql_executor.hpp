@@ -7,6 +7,42 @@
 #include <sql.h>
 #include <sqlext.h>
 #include <string>
+#include <memory>
+#include <utility>
+
+template<int T>
+struct sql_handle {
+    sql_handle() = default;
+
+    sql_handle(sql_handle& rhs) = delete;
+
+    sql_handle(sql_handle&& rhs) noexcept
+            :handle_(std::exchange(rhs.handle_, nullptr)) {
+    }
+
+    ~sql_handle() {
+        SQLFreeHandle(T, handle_);
+    }
+
+    sql_handle& operator=(sql_handle& rhs) = delete;
+
+    sql_handle& operator=(sql_handle&& rhs) noexcept {
+        handle_ = std::exchange(rhs.handle_, nullptr);
+    }
+
+    operator SQLHANDLE () {
+        return handle_;
+    }
+
+    SQLHANDLE* put() {
+        return &handle_;
+    }
+
+private:
+    SQLHANDLE handle_ = SQL_NULL_HANDLE;
+};
+
+using sql_statement = sql_handle<SQL_HANDLE_STMT>;
 
 struct connection_data_s {
     const char* username;
@@ -23,35 +59,43 @@ public:
         connect(connection_data);
     };
 
-    SQLHSTMT execute(const wchar_t* sql) {
-        reset_handler();
+    sql_statement execute(const wchar_t* sql) {
+        sql_statement hstmt;
 
-        SQLRETURN retcode = SQLExecDirectW(hstmt, (SQLWCHAR*)sql, SQL_NTS);
-
-        if (SQL_SUCCEEDED(retcode) || retcode == SQL_NO_DATA) {
-            return this->hstmt;
+        if (!SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_STMT, hdbc, hstmt.put()))) {
+            throw std::runtime_error(error(this->hdbc));
         }
 
-        throw std::runtime_error(error(this->hstmt));
+        auto retcode = SQLExecDirectW(hstmt, (SQLWCHAR*)sql, SQL_NTS);
+
+        if (SQL_SUCCEEDED(retcode) || retcode == SQL_NO_DATA) {
+            return hstmt;
+        }
+
+        throw std::runtime_error(error(hstmt));
     };
 
-    SQLHSTMT execute(const std::wstring& sql) {
+    sql_statement execute(const std::wstring& sql) {
         return this->execute(sql.c_str());
     };
 
-    SQLHSTMT execute(const char* sql) {
-        reset_handler();
+    sql_statement execute(const char* sql) {
+        sql_statement hstmt;
 
-        SQLRETURN retcode = SQLExecDirect(hstmt, (SQLCHAR*)sql, SQL_NTS);
-
-        if (SQL_SUCCEEDED(retcode) || retcode == SQL_NO_DATA) {
-            return this->hstmt;
+        if (!SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_STMT, hdbc, hstmt.put()))) {
+            throw std::runtime_error(error(this->hdbc));
         }
 
-        throw std::runtime_error(error(this->hstmt));
+        auto retcode = SQLExecDirect(hstmt, (SQLCHAR*)sql, SQL_NTS);
+
+        if (SQL_SUCCEEDED(retcode) || retcode == SQL_NO_DATA) {
+            return hstmt;
+        }
+
+        throw std::runtime_error(error(hstmt));
     };
 
-    SQLHSTMT execute(const std::string& sql) {
+    sql_statement execute(const std::string& sql) {
         return this->execute(sql.c_str());
     };
 
@@ -63,10 +107,6 @@ public:
     }
 
     ~sql_executor() {
-        if (this->hstmt != SQL_NULL_HSTMT) {
-            SQLFreeHandle(SQL_HANDLE_STMT, this->hstmt);
-        }
-
         if (this->hdbc != SQL_NULL_HDBC) {
             SQLDisconnect(this->hdbc);
             SQLFreeHandle(SQL_HANDLE_DBC, this->hdbc);
@@ -80,9 +120,8 @@ public:
 private:
     SQLHENV henv = SQL_NULL_HENV;
     SQLHDBC hdbc = SQL_NULL_HDBC;
-    SQLHSTMT hstmt = SQL_NULL_HSTMT;
 
-    HWND desktopHandle = GetDesktopWindow();
+    HWND desktopHandle = GetActiveWindow();
 
     static std::string get_connection_string(connection_data_s connection_data) {
         std::stringstream connection_string;
@@ -133,7 +172,7 @@ private:
 
         retcode = SQLDriverConnect( // SQL_NULL_HDBC
                 hdbc,
-                desktopHandle,
+                static_cast<SQLHWND>(desktopHandle),
                 (SQLCHAR*)connectionString.c_str(),
                 SQL_NTS,
                 OutConnStr,
@@ -145,32 +184,6 @@ private:
             SQLFreeHandle(SQL_HANDLE_ENV, henv);
 
             throw std::runtime_error("Unable to connect database");
-        }
-
-        // Allocate statement handle
-        retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
-        if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
-            SQLDisconnect(hdbc);
-            SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
-            SQLFreeHandle(SQL_HANDLE_ENV, henv);
-
-            throw std::runtime_error("Unable to allocate statement handle");
-        }
-    };
-
-    void reset_handler() {
-        if (this->hstmt != SQL_NULL_HSTMT) {
-            SQLFreeHandle(SQL_HANDLE_STMT, this->hstmt);
-
-            // Allocate statement handle
-            auto retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
-            if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
-                SQLDisconnect(hdbc);
-                SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
-                SQLFreeHandle(SQL_HANDLE_ENV, henv);
-
-                throw std::runtime_error("Unable to allocate statement handle");
-            }
         }
     };
 };

@@ -2,59 +2,76 @@
 #define DATABASE_PROGRAMMING_1_ACCOUNT_HPP
 
 #include <optional>
+#include "windows.h"
+#include <sql.h>
 #include <sqlext.h>
+#include <ctime>
+#include <entities/client.hpp>
+#include <entities/deposit.hpp>
+#include <mappers/client_mapper.hpp>
+#include <mappers/deposit_mapper.hpp>
 
-struct account {
+class account {
+public:
     std::optional<int> id;
 
-    int deposit_id = 0;
-    int client_id = 0;
+    client* client;
+    deposit* deposit;
 
-    DATE_STRUCT opening_date = { .year=2000, .month = 0, .day = 0 };
-    DATE_STRUCT closing_date = { .year=2000, .month = 0, .day = 0 };
+    DATE_STRUCT opening_date{};
+    DATE_STRUCT closing_date{};
 
-    static account read(std::wistream& in, std::wostream& out) {
-        int deposit_id_, client_id_;
+    account() = default;
+    account(class client* client, class deposit* deposit);
+    account(int id, class client* client, class deposit* deposit);
 
-        DATE_STRUCT opening_date_, closing_date_;
+    static account* read(std::wistream& in, std::wostream& out, client_mapper& client_mapper, deposit_mapper& deposit_mapper) {
+        int deposit_position, client_position;
 
-        out << L"Введите ID вклада:" << std::endl;
-        in >> deposit_id_;
+        auto deposits = deposit_mapper.read();
+        auto position = 1;
+        for (auto deposit: deposits) {
+            std::wcout << position++ << L". " << deposit << std::endl;
+        }
+        out << L"Введите позицию вклада:" << std::endl;
+        in >> deposit_position;
+        auto deposit = deposit_mapper.read(deposit_position - 1);
 
-        out << L"Введите ID клиента:" << std::endl;
-        in >> client_id_;
+        auto clients = client_mapper.read();
+        position = 1;
+        for (auto client: clients) {
+            std::wcout << position++ << L". " << client << std::endl;
+        }
+        out << L"Введите позицию клиента:" << std::endl;
+        in >> client_position;
+        auto client = client_mapper.read(client_position - 1);
 
-        out << L"Дата открытия:" << std::endl;
-        out << L"Введите День:" << std::endl;
-        in >> opening_date_.day;
-        out << L"Введите Месяц:" << std::endl;
-        in >> opening_date_.month;
-        out << L"Введите Год:" << std::endl;
-        in >> opening_date_.year;
 
-        out << L"Дата закрытия:" << std::endl;
-        out << L"Введите День:" << std::endl;
-        in >> closing_date_.day;
-        out << L"Введите Месяц:" << std::endl;
-        in >> closing_date_.month;
-        out << L"Введите Год:" << std::endl;
-        in >> closing_date_.year;
+        // Даты
+        std::time_t t = std::time(nullptr);
+        std::tm* const pTInfo = std::localtime(&t);
 
-        return { .deposit_id = deposit_id_, .client_id = client_id_, .opening_date = opening_date_, .closing_date = closing_date_ };
+        DATE_STRUCT opening_date = { .year = (SQLSMALLINT)(1900 + pTInfo->tm_year), .month = (SQLUSMALLINT)(1 + pTInfo->tm_mon), .day = (SQLUSMALLINT)(pTInfo->tm_mday) };
+
+        int closing_month = (opening_date.month + deposit->term) % 12;
+        int closing_year = opening_date.year + (closing_month / 12);
+
+        DATE_STRUCT closing_date = { .year = (SQLSMALLINT)(closing_year), .month = (SQLUSMALLINT)(closing_month), .day = opening_date.day };
+
+        auto result = new account();
+
+        result->client = client;
+        result->deposit = deposit;
+        result->opening_date = opening_date;
+        result->closing_date = closing_date;
+
+        return result;
     }
 
-    friend std::wostream& operator<<(std::wostream& out, account& account_) {
-        if (account_.id.has_value()) {
-            out << account_.id.value() << ' ';
-        }
-
-        out << account_.deposit_id << ' ' << account_.client_id << ' '
-            << account_.opening_date.day << '-' << account_.opening_date.month << '-' << account_.opening_date.year
-            << ' '
-            << account_.closing_date.day << '-' << account_.closing_date.month << '-' << account_.closing_date.year;
-
-        return out;
-    };
+    friend std::wostream& operator<<(std::wostream& out, account& account);
+    friend std::wostream& operator<<(std::wostream& out, account* account);
+private:
+    void set_dates();
 };
 
 #endif //DATABASE_PROGRAMMING_1_ACCOUNT_HPP

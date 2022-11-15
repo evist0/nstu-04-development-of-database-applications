@@ -2,9 +2,12 @@
 #define DATABASE_PROGRAMMING_1_CLIENT_HPP
 
 #include <optional>
-#include <utility>
+#include <string>
+#include <vector>
+#include <iostream>
 
-struct client {
+class client {
+public:
     std::optional<int> id;
 
     std::wstring name;
@@ -17,7 +20,7 @@ struct client {
 
     std::wstring phone;
 
-    static client read(std::wistream& in, std::wostream& out) {
+    static client* read(std::wistream& in, std::wostream& out) {
         std::wstring name_;
         std::wstring surname_;
         std::wstring patronymic_;
@@ -46,17 +49,20 @@ struct client {
         out << L"Введите Адрес:" << std::endl;
         in >> address_;
 
-        return { .name = name_, .surname = surname_, .patronymic = patronymic_, .passport = passport_, .address = address_, .phone = phone_ };
+        auto result = new client();
+
+        result->name = name_;
+        result->surname = surname_;
+        result->patronymic = patronymic_;
+        result->passport = passport_;
+        result->address = address_;
+        result->phone = phone_;
+
+        return result;
     }
 
-    friend std::wostream& operator<<(std::wostream& out, client& client_) {
-        if (client_.id.has_value()) {
-            out << client_.id.value() << ' ';
-        }
+    friend std::wostream& operator<<(std::wostream& out, client& client_);
 
-        out << client_.surname << ' ' << client_.name << ' ' << client_.patronymic << ' '
-            << client_.passport << ' ' << client_.phone << ' ' << client_.address;
-    };
+    friend std::wostream& operator<<(std::wostream& out, client* client_);
 };
-
 #endif //DATABASE_PROGRAMMING_1_CLIENT_HPP

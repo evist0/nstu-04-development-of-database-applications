@@ -14,21 +14,21 @@ bool menu(deposit_mapper& deposit_instance, client_mapper& client_instance,
 
         std::wcout << L"--- Счета ---" << std::endl
                    << L"1. Показать все счета" << std::endl
-                   << L"2. Найти счёт по индентификатору" << std::endl
+                   << L"2. Найти счёт по позиции" << std::endl
                    << L"3. Изменить данные счёта" << std::endl
                    << L"4. Создать счёт" << std::endl
                    << L"5. Удалить счёт" << std::endl << std::endl;
 
         std::wcout << L"--- Клиенты ---" << std::endl
                    << L"6. Показать всех клиентов" << std::endl
-                   << L"7. Найти клиента по индентификатору" << std::endl
+                   << L"7. Найти клиента по позиции" << std::endl
                    << L"8. Изменить данные клиента" << std::endl
                    << L"9. Создать клиента" << std::endl
                    << L"10. Удалить клиента" << std::endl << std::endl;
 
         std::wcout << L"--- Вклады ---" << std::endl
                    << L"11. Показать все вклады" << std::endl
-                   << L"12. Найти вклад по индентификатору" << std::endl
+                   << L"12. Найти вклад по позиции" << std::endl
                    << L"13. Изменить данные вклада" << std::endl
                    << L"14. Создать вклад" << std::endl
                    << L"15. Удалить вклад" << std::endl << std::endl;
@@ -43,21 +43,21 @@ bool menu(deposit_mapper& deposit_instance, client_mapper& client_instance,
         if (choice == 1) {
             auto result = account_instance.read();
 
-            std::wcout << L"ID " << L"Вклад " << L"Клиент " << L"Дата открытия " << L"Дата закрытия " << std::endl;
+            auto position = 1;
             for (auto account: result) {
-                std::wcout << account << std::endl;
+                std::wcout << position++ << L". " << account << std::endl;
             }
+
             std::wcout << std::endl;
         }
 
-        // 2. Найти счёт по идентификатору
+        // 2. Найти счёт по позиции
         if (choice == 2) {
-            int id;
-            std::wcin >> id;
+            int position;
+            std::wcin >> position;
 
-            auto result = account_instance.read(id);
+            auto result = account_instance.read(position - 1);
 
-            std::wcout << L"ID " << L"Вклад " << L"Клиент " << L"Дата открытия " << L"Дата закрытия " << std::endl;
             std::wcout << result << std::endl;
         }
 
@@ -67,21 +67,25 @@ bool menu(deposit_mapper& deposit_instance, client_mapper& client_instance,
 
         // 4. Создать счёт
         if (choice == 4) {
-            auto account = account::read(std::wcin, std::wcout);
+            auto account = account::read(std::wcin, std::wcout, client_instance, deposit_instance);
             auto result = account_instance.create(account);
 
-            std::wcout << L"ID " << L"Вклад " << L"Клиент " << L"Дата открытия " << L"Дата закрытия " << std::endl;
             std::wcout << result << std::endl;
         }
 
         // 5. Удалить счёт
-        if (choice == 4) {
-            int id;
-            std::wcin >> id;
+        if (choice == 5) {
+            auto list = account_instance.read();
 
-            auto result = account_instance.remove(id);
+            auto position = 1;
+            for (auto account: list) {
+                std::wcout << position++ << L". " << account << std::endl;
+            }
 
-            std::wcout << L"ID " << L"Вклад " << L"Клиент " << L"Дата открытия " << L"Дата закрытия " << std::endl;
+            std::wcin >> position;
+
+            auto result = account_instance.remove(position - 1);
+
             std::wcout << result << std::endl;
         }
 
@@ -90,21 +94,21 @@ bool menu(deposit_mapper& deposit_instance, client_mapper& client_instance,
         if (choice == 6) {
             auto result = client_instance.read();
 
-            std::wcout << L"ID " << L"Фамилия " << L"Имя " << L"Отчество " << L"Паспорт " << L"Телефон " << L"Адрес " << std::endl;
+            auto position = 1;
             for (auto client: result) {
-                std::wcout << client << std::endl;
+                std::wcout << position++ << L". " << client << std::endl;
             }
+
             std::wcout << std::endl;
         }
 
-        // 7. Найти клиента по индентификатору
+        // 7. Найти клиента по позиции
         if (choice == 7) {
-            int id;
-            std::wcin >> id;
+            int position;
+            std::wcin >> position;
 
-            auto result = client_instance.read(id);
+            auto result = client_instance.read(position - 1);
 
-            std::wcout << L"ID " << L"Фамилия " << L"Имя " << L"Отчество " << L"Паспорт " << L"Телефон " << L"Адрес " << std::endl;
             std::wcout << result << std::endl;
         }
 
@@ -117,18 +121,16 @@ bool menu(deposit_mapper& deposit_instance, client_mapper& client_instance,
             auto client = client::read(std::wcin, std::wcout);
             auto result = client_instance.create(client);
 
-            std::wcout << L"ID " << L"Фамилия " << L"Имя " << L"Отчество " << L"Паспорт " << L"Телефон " << L"Адрес " << std::endl;
             std::wcout << result << std::endl;
         }
 
         // 10. Удалить клиента
         if (choice == 10) {
-            int id;
-            std::wcin >> id;
+            int position;
+            std::wcin >> position;
 
-            auto result = client_instance.remove(id);
+            auto result = client_instance.remove(position - 1);
 
-            std::wcout << L"ID " << L"Фамилия " << L"Имя " << L"Отчество " << L"Паспорт " << L"Телефон " << L"Адрес " << std::endl;
             std::wcout << result << std::endl;
         }
 
@@ -137,21 +139,21 @@ bool menu(deposit_mapper& deposit_instance, client_mapper& client_instance,
         if (choice == 11) {
             auto result = deposit_instance.read();
 
-            std::wcout << L"ID " << L"Название " << L"Длительность " << L"Процент " << std::endl;
+            auto position = 1;
             for (auto deposit: result) {
-                std::wcout << deposit << std::endl;
+                std::wcout << position++ << L". " << deposit << std::endl;
             }
+
             std::wcout << std::endl;
         }
 
-        // 12. Найти вклад по индентификатору
+        // 12. Найти вклад по позиции
         if (choice == 12) {
-            int id;
-            std::wcin >> id;
+            int position;
+            std::wcin >> position;
 
-            auto result = deposit_instance.read(id);
+            auto result = deposit_instance.read(position - 1);
 
-            std::wcout << L"ID " << L"Название " << L"Длительность " << L"Процент " << std::endl;
             std::wcout << result << std::endl;
         }
 
@@ -164,20 +166,20 @@ bool menu(deposit_mapper& deposit_instance, client_mapper& client_instance,
             auto deposit = deposit::read(std::wcin, std::wcout);
             auto result = deposit_instance.create(deposit);
 
-            std::wcout << L"ID " << L"Название " << L"Длительность " << L"Процент " << std::endl;
             std::wcout << result << std::endl;
         }
 
         // 15. Удалить вклад
         if (choice == 15) {
-            int id;
-            std::wcin >> id;
+            int position;
+            std::wcin >> position;
 
-            auto result = deposit_instance.remove(id);
+            auto result = deposit_instance.remove(position - 1);
 
-            std::wcout << L"ID " << L"Название " << L"Длительность " << L"Процент " << std::endl;
             std::wcout << result << std::endl;
         }
+
+        system("pause");
 
         // 0. Выход
         if (choice == 0) {
@@ -189,6 +191,7 @@ bool menu(deposit_mapper& deposit_instance, client_mapper& client_instance,
 }
 
 int main(int argc, char** argv) {
+
     _setmode(_fileno(stdin), _O_U16TEXT);
     _setmode(_fileno(stdout), _O_U16TEXT);
     _setmode(_fileno(stderr), _O_U16TEXT);
@@ -207,7 +210,7 @@ int main(int argc, char** argv) {
 
         auto deposit_mapper_instance = deposit_mapper(&executor);
         auto client_mapper_instance = client_mapper(&executor);
-        auto account_mapper_instance = account_mapper(&executor);
+        auto account_mapper_instance = account_mapper(&executor, &deposit_mapper_instance, &client_mapper_instance);
 
         menu(deposit_mapper_instance, client_mapper_instance, account_mapper_instance);
     }

@@ -2,17 +2,19 @@
 #define DATABASE_PROGRAMMING_1_DEPOSIT_HPP
 
 #include <optional>
-#include <utility>
+#include <string>
+#include <vector>
+#include <iostream>
 
-struct deposit {
+class deposit {
+public:
     std::optional<int> id;
-
     std::wstring name;
 
     int term;
     float annual;
 
-    static deposit read(std::wistream& in, std::wostream& out) {
+    static deposit* read(std::wistream& in, std::wostream& out) {
         std::wstring name_;
         int term_;
         float annual_;
@@ -20,22 +22,22 @@ struct deposit {
         out << L"Введите название:" << std::endl;
         in >> name_;
 
-        out << L"Введите длительность (месяцев):" << std::endl;
+        out << L"Введите длительность:" << std::endl;
         in >> term_;
 
-        out << L"Введите процент:" << std::endl;
+        out << L"Введите процентную ставку" << std::endl;
         in >> annual_;
 
-        return { .name = name_, .term=term_, .annual=annual_ };
+        auto result = new deposit();
+        result->name = name_;
+        result->term = term_;
+        result->annual = annual_;
+
+        return result;
     }
 
-    friend std::wostream& operator<<(std::wostream& out, deposit& deposit_) {
-        if (deposit_.id.has_value()) {
-            out << deposit_.id.value() << ' ';
-        }
-
-        out << deposit_.name << ' ' << deposit_.term << ' ' << deposit_.annual;
-    };
+    friend std::wostream& operator<<(std::wostream& out, deposit& deposit_);
+    friend std::wostream& operator<<(std::wostream& out, deposit* deposit_);
 };
 
 #endif //DATABASE_PROGRAMMING_1_DEPOSIT_HPP

@@ -2,8 +2,8 @@
 #define DATABASE_PROGRAMMING_1_CLIENT_MAPPER_HPP
 
 #include <vector>
+#include <entities/client.hpp>
 #include "sql_executor.hpp"
-#include "entities/client.hpp"
 
 class client_mapper {
 public:
@@ -25,26 +25,30 @@ public:
                 "    phone      varchar(255) not null\n"
                 ")";
 
-        SQLHSTMT statement = executor_->execute(query);
+        sql_statement statement = executor_->execute(query);
         auto retcode = SQLFetch(statement);
     };
 
-    client create(const client& client_) {
+    client* create(client* client) {
+        if (client->id.has_value()) {
+            throw std::runtime_error("[client_mapper]: already exists");
+        }
+
         std::wstringstream query_builder;
 
         query_builder <<
                       "insert into clients(name, surname, patronymic, passport, address, phone)" << std::endl <<
                       "values" << std::endl << '(' <<
-                      '\'' << client_.name << '\'' << ',' <<
-                      '\'' << client_.surname << '\'' << ',' <<
-                      '\'' << client_.patronymic << '\'' << ',' <<
-                      '\'' << client_.passport << '\'' << ',' <<
-                      '\'' << client_.address << '\'' << ',' <<
-                      '\'' << client_.phone << '\'' <<
+                      '\'' << client->name << '\'' << ',' <<
+                      '\'' << client->surname << '\'' << ',' <<
+                      '\'' << client->patronymic << '\'' << ',' <<
+                      '\'' << client->passport << '\'' << ',' <<
+                      '\'' << client->address << '\'' << ',' <<
+                      '\'' << client->phone << '\'' <<
                       ')' << std::endl <<
                       "returning id";
 
-        SQLHSTMT statement = executor_->execute(query_builder.str());
+        sql_statement statement = executor_->execute(query_builder.str());
 
         SQLINTEGER id;
 
@@ -52,15 +56,15 @@ public:
 
         retcode = SQLFetch(statement);
 
-        auto new_client = client_;
-        new_client.id = id;
-        return new_client;
+        client->id = id;
+
+        this->clients_.push_back(client);
+
+        return client;
     }
 
-    std::vector<client> read() {
-        SQLHSTMT statement = executor_->execute("select * from clients");
-
-        std::vector<client> result;
+    std::vector<client*> read() {
+        sql_statement statement = executor_->execute("select * from clients");
 
         SQLINTEGER id;
         SQLWCHAR name[255];
@@ -82,34 +86,71 @@ public:
             retcode = SQLFetch(statement);
 
             if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
-                result.push_back({
-                        .id = id,
-                        .name = name,
-                        .surname = surname,
-                        .patronymic = patronymic,
-                        .passport = passport,
-                        .address = address,
-                        .phone = phone
-                });
+                auto new_client = new client();
+                new_client->id = id;
+                new_client->name = name;
+                new_client->surname = surname;
+                new_client->patronymic = patronymic;
+                new_client->passport = passport;
+                new_client->address = address;
+                new_client->phone = phone;
+
+                bool found = false;
+                for (auto client: clients_) {
+                    if (client->id.value() == new_client->id.value()) {
+                        client->id = id;
+                        client->name = name;
+                        client->surname = surname;
+                        client->patronymic = patronymic;
+                        client->passport = passport;
+                        client->address = address;
+                        client->phone = phone;
+                        found = true;
+                    }
+                }
+
+                if (!found) {
+                    clients_.push_back(new_client);
+                } else {
+                    delete new_client;
+                }
             }
             else if (retcode == SQL_NO_DATA) {
                 break;
             }
         }
 
-        return result;
+        return clients_;
     }
 
-    client read(int id_) {
+    client* read(const int& position) {
+        if(position > clients_.size()) {
+            throw std::runtime_error("[client_mapper]: out of bounds");
+        }
+
+        return clients_[position];
+    }
+
+    client* read_id(const int& id) {
+        client* result = nullptr;
+
+        // Ищем локально
+        for (auto client: clients_) {
+            if (client->id == id) {
+                result = client;
+                return result;
+            }
+        }
+
+        // Если не нашли - получаем из БД
         std::stringstream query_builder;
 
         query_builder <<
                       "select * from clients" << std::endl <<
-                      "where id = " << id_;
+                      "where id = " << id;
 
-        SQLHSTMT statement = executor_->execute(query_builder.str());
+        sql_statement statement = executor_->execute(query_builder.str());
 
-        SQLINTEGER id;
         SQLWCHAR name[255];
         SQLWCHAR surname[255];
         SQLWCHAR patronymic[255];
@@ -117,8 +158,7 @@ public:
         SQLWCHAR address[255];
         SQLWCHAR phone[255];
 
-        auto retcode = SQLBindCol(statement, 1, SQL_C_LONG, &id, 0, nullptr);
-        retcode = SQLBindCol(statement, 2, SQL_C_WCHAR, &name, 255, nullptr);
+        auto retcode = SQLBindCol(statement, 2, SQL_C_WCHAR, &name, 255, nullptr);
         retcode = SQLBindCol(statement, 3, SQL_C_WCHAR, &surname, 255, nullptr);
         retcode = SQLBindCol(statement, 4, SQL_C_WCHAR, &patronymic, 255, nullptr);
         retcode = SQLBindCol(statement, 5, SQL_C_WCHAR, &passport, 255, nullptr);
@@ -127,21 +167,23 @@ public:
 
         retcode = SQLFetch(statement);
 
-        client fetched = {
-                .id = id,
-                .name = name,
-                .surname = surname,
-                .patronymic = patronymic,
-                .passport = passport,
-                .address = address,
-                .phone = phone
-        };
+        // Сохранили локально
+        result = new client();
+        result->id = id;
+        result->name = name;
+        result->surname = surname;
+        result->patronymic = patronymic;
+        result->passport = passport;
+        result->address = address;
+        result->phone = phone;
 
-        return fetched;
+        clients_.push_back(result);
+
+        return result;
     }
 
-    client update(const client& client_) {
-        if (!client_.id.has_value()) {
+    client* update(client* client) {
+        if (!client->id.has_value()) {
             throw std::runtime_error("[client_mapper]: record doesn't exists");
         }
 
@@ -150,16 +192,16 @@ public:
         query_builder <<
                       "update clients" << std::endl <<
                       "set " <<
-                      "name=" << '\'' << client_.name << '\'' << ',' <<
-                      "surname=" << '\'' << client_.surname << '\'' << ',' <<
-                      "patronymic=" << '\'' << client_.patronymic << '\'' << ',' <<
-                      "passport=" << '\'' << client_.passport << '\'' << ',' <<
-                      "address=" << '\'' << client_.address << '\'' << ',' <<
-                      "phone=" << '\'' << client_.phone << '\'' << std::endl <<
-                      "where id = " << client_.id.value() << std::endl <<
+                      "name=" << '\'' << client->name << '\'' << ',' <<
+                      "surname=" << '\'' << client->surname << '\'' << ',' <<
+                      "patronymic=" << '\'' << client->patronymic << '\'' << ',' <<
+                      "passport=" << '\'' << client->passport << '\'' << ',' <<
+                      "address=" << '\'' << client->address << '\'' << ',' <<
+                      "phone=" << '\'' << client->phone << '\'' << std::endl <<
+                      "where id = " << client->id.value() << std::endl <<
                       "returning *";
 
-        SQLHSTMT statement = executor_->execute(query_builder.str());
+        sql_statement statement = executor_->execute(query_builder.str());
 
         SQLINTEGER id;
         SQLWCHAR name[255];
@@ -179,62 +221,43 @@ public:
 
         retcode = SQLFetch(statement);
 
-        client fetched = {
-                .id = id,
-                .name = name,
-                .surname = surname,
-                .patronymic = patronymic,
-                .passport = passport,
-                .address = address,
-                .phone = phone
-        };
+        client->name = name;
+        client->surname = surname;
+        client->patronymic = patronymic;
+        client->passport = passport;
+        client->address = address;
+        client->phone = phone;
 
-        return fetched;
+        return client;
     }
 
-    client remove(int id_) {
+    int remove(const int& position) {
+        if(position > clients_.size()) {
+            throw std::runtime_error("[client_mapper]: out of bounds");
+        }
+
         std::stringstream query_builder;
 
         query_builder <<
                       "delete from clients" << std::endl <<
-                      "where id = " << id_ << std::endl <<
-                      "returning *";
+                      "where id = " << clients_[position]->id.value() << std::endl <<
+                      "returning id";
 
-        SQLHSTMT statement = executor_->execute(query_builder.str());
+        sql_statement statement = executor_->execute(query_builder.str());
 
         SQLINTEGER id;
-        SQLWCHAR name[255];
-        SQLWCHAR surname[255];
-        SQLWCHAR patronymic[255];
-        SQLWCHAR passport[255];
-        SQLWCHAR address[255];
-        SQLWCHAR phone[255];
-
         auto retcode = SQLBindCol(statement, 1, SQL_C_LONG, &id, 0, nullptr);
-        retcode = SQLBindCol(statement, 2, SQL_C_WCHAR, &name, 255, nullptr);
-        retcode = SQLBindCol(statement, 3, SQL_C_WCHAR, &surname, 255, nullptr);
-        retcode = SQLBindCol(statement, 4, SQL_C_WCHAR, &patronymic, 255, nullptr);
-        retcode = SQLBindCol(statement, 5, SQL_C_WCHAR, &passport, 255, nullptr);
-        retcode = SQLBindCol(statement, 6, SQL_C_WCHAR, &address, 255, nullptr);
-        retcode = SQLBindCol(statement, 7, SQL_C_WCHAR, &phone, 255, nullptr);
-
         retcode = SQLFetch(statement);
 
-        client fetched = {
-                .id = id,
-                .name = name,
-                .surname = surname,
-                .patronymic = patronymic,
-                .passport = passport,
-                .address = address,
-                .phone = phone
-        };
+        delete clients_[position];
+        clients_.erase(clients_.begin() + position);
 
-        return fetched;
+        return id;
     }
 
 private:
     sql_executor* executor_;
+    std::vector<client*> clients_;
 };
 
 #endif //DATABASE_PROGRAMMING_1_CLIENT_MAPPER_HPP
