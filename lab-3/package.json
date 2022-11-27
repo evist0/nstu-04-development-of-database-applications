@@ -9,12 +9,25 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.17.9",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@hookform/resolvers": "^2.9.10",
+    "@loadable/component": "^5.15.2",
+    "@mui/lab": "^5.0.0-alpha.109",
+    "@mui/material": "^5.10.15",
+    "bcrypt": "^5.1.0",
+    "compose-function": "^3.0.3",
     "dotenv": "^16.0.3",
     "meteor-node-stubs": "^1.2.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-hook-form": "^7.39.6",
+    "react-router-dom": "^6.4.3",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@types/compose-function": "^0.0.30",
+    "@types/loadable__component": "^5.13.4",
     "@types/meteor": "^2.8.1",
     "@types/mocha": "^8.2.3",
     "@types/react": "^17.0.43",
