@@ -1,43 +1,43 @@
-version: "3.9"
+version: '3.9'
 
 services:
   mongo-1:
-    image: "mongo:6"
+    image: 'mongo:6'
     container_name: mongo-1
     command: mongod --shardsvr --replSet shards --dbpath /data/db --port 27017 --bind_ip localhost,mongo-1
     volumes:
       - shard-1:/data/db
 
   mongo-2:
-    image: "mongo:6"
+    image: 'mongo:6'
     container_name: mongo-2
     command: mongod --shardsvr --replSet shards --dbpath /data/db --port 27017 --bind_ip localhost,mongo-2
     volumes:
       - shard-2:/data/db
 
   mongo-3:
-    image: "mongo:6"
+    image: 'mongo:6'
     container_name: mongo-3
     command: mongod --shardsvr --replSet shards --dbpath /data/db --port 27017 --bind_ip localhost,mongo-3
     volumes:
       - shard-3:/data/db
 
   mongo-config-1:
-    image: "mongo:6"
+    image: 'mongo:6'
     container_name: mongo-config-1
     command: mongod --configsvr --replSet configs --dbpath /data/db --port 27017 --bind_ip localhost,mongo-config-1
     volumes:
       - config-1:/data/db
 
   mongo-config-2:
-    image: "mongo:6"
+    image: 'mongo:6'
     container_name: mongo-config-2
     command: mongod --configsvr --replSet configs --dbpath /data/db --port 27017 --bind_ip localhost,mongo-config-2
     volumes:
       - config-2:/data/db
 
   mongos:
-    image: "mongo:6"
+    image: 'mongo:6'
     container_name: mongos
     depends_on:
       - mongo-config-1
@@ -45,7 +45,7 @@ services:
     environment:
       - SHARDS=shards/mongo-1
     ports:
-      - "27017:27017"
+      - '27017:27017'
 
 volumes:
   shard-1:

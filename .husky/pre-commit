@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd lab-3
+yarn lint-staged

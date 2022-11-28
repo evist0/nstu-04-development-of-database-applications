@@ -1,9 +1,12 @@
-import React, { StrictMode } from 'react';
-import { RouterProvider } from 'react-router-dom';
+import { StrictMode } from 'react'
 
-import { router } from './routing';
+import { RouterProvider } from 'react-router-dom'
+
+import { router } from './routing'
 
 // TODO: withStrictMode HOC
-export const App = () => <StrictMode>
-  <RouterProvider router={router}/>
-</StrictMode>
+export const App = () => (
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>
+)

@@ -1,11 +1,11 @@
-declare module "meteor/meteor" {
-    interface UserProfile {
-        name: string;
-        surname: string;
-        patronymic: string;
+declare module 'meteor/meteor' {
+  interface UserProfile {
+    name: string
+    surname: string
+    patronymic: string
 
-        passport: string;
-        address: string;
-        phone: string;
-    }
+    passport: string
+    address: string
+    phone: string
+  }
 }

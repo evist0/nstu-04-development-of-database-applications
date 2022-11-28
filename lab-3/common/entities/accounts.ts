@@ -1,12 +1,13 @@
-import { Mongo } from "meteor/mongo";
-import { UserProfile } from "meteor/meteor";
-import { Tariff } from "/common/entities/tariffs";
+import { Mongo } from 'meteor/mongo'
+import type { UserProfile } from 'meteor/meteor'
+
+import type { Tariff } from '/common/entities/tariffs'
 
 export interface Account {
-    _id?: string;
+  _id?: string
 
-    userProfile: UserProfile;
-    tariff: Tariff;
+  userProfile: UserProfile
+  tariff: Tariff
 }
 
-export const AccountsCollection = new Mongo.Collection<Account>('accounts');
+export const AccountsCollection = new Mongo.Collection<Account>('accounts')
