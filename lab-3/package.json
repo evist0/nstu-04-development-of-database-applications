@@ -29,6 +29,8 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
     "@types/compose-function": "^0.0.30",
     "@types/loadable__component": "^5.13.4",
     "@types/meteor": "^2.8.1",
@@ -56,6 +58,9 @@
     "testModule": "tests/main.ts"
   },
   "lint-staged": {
-    "*.{js, jsx, ts, tsx}": ["eslint --fix", "prettier --write"]
+    "*.{js, jsx, ts, tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
