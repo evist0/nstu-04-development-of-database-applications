@@ -1354,6 +1354,11 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.190.tgz#d8e99647af141c63902d0ca53cf2b34d2df33545"
   integrity sha512-5iJ3FBJBvQHQ8sFhEhJfjUP+G+LalhavTkYyrAYqz5MEJG+erSv0k9KJLb6q7++17Lafk1scaTIFXcMJlwK8Mw==
 
+"@types/meteor-roles@^1.2.34":
+  version "1.2.34"
+  resolved "https://registry.yarnpkg.com/@types/meteor-roles/-/meteor-roles-1.2.34.tgz#53d93e266e10fd905cfce52436aafea4990bb227"
+  integrity sha512-n4CtPxBgHUKDd9Kmj5ZMnfISPrn/AkGBd7ebXQ+QfgkdLwcLx+PPWsz3wUJgUv9Uzys0ZWwCPBH1nb2Yfgl8Cg==
+
 "@types/meteor@^2.8.1":
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/@types/meteor/-/meteor-2.8.1.tgz#2052924c818dd3d1432f14dd6ce557f1ce590858"

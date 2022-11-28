@@ -6,7 +6,7 @@
     "lib": ["esnext", "dom"],
     "allowJs": true,
     "checkJs": false,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "incremental": true,
     "noEmit": true,
 
@@ -29,9 +29,18 @@
     },
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "types": ["node", "mocha"],
+    "types": ["node", "mocha", "meteor", "meteor-roles", "cultofcoders:grapher"],
     "esModuleInterop": true,
     "preserveSymlinks": true
   },
-  "exclude": ["./.meteor/**", "./packages/**"]
+  "include": [
+    "typings.d.ts",
+    "client",
+    "common",
+    "server",
+  ],
+  "exclude": [
+    "./.meteor/**",
+    "./packages/**"
+  ]
 }

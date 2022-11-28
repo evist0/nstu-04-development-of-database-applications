@@ -34,6 +34,7 @@
     "@types/compose-function": "^0.0.30",
     "@types/loadable__component": "^5.13.4",
     "@types/meteor": "^2.8.1",
+    "@types/meteor-roles": "^1.2.34",
     "@types/mocha": "^8.2.3",
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
