@@ -60,6 +60,8 @@ public:
     };
 
     sql_statement execute(const wchar_t* sql) {
+        std::wcout << sql << std::endl;
+
         sql_statement hstmt;
 
         if (!SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_STMT, hdbc, hstmt.put()))) {

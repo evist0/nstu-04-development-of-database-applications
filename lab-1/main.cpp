@@ -63,6 +63,42 @@ bool menu(deposit_mapper& deposit_instance, client_mapper& client_instance,
 
         // 3. Изменить данные счёта [TBD]
         if (choice == 3) {
+            int account_position, deposit_position, client_position;
+
+            auto accounts = account_instance.read();
+            auto position = 1;
+            for (auto account: accounts) {
+                std::wcout << position++ << L". " << account << std::endl;
+            }
+            std::wcout << L"Введите позицию счёта:" << std::endl;
+            std::wcin >> account_position;
+            auto account = account_instance.read(account_position - 1);
+
+            auto deposits = deposit_instance.read();
+            position = 1;
+            for (auto deposit: deposits) {
+                std::wcout << position++ << L". " << deposit << std::endl;
+            }
+            std::wcout << L"Введите позицию вклада:" << std::endl;
+            std::wcin >> deposit_position;
+            auto deposit = deposit_instance.read(deposit_position - 1);
+
+            auto clients = client_instance.read();
+            position = 1;
+            for (auto client: clients) {
+                std::wcout << position++ << L". " << client << std::endl;
+            }
+            std::wcout << L"Введите позицию клиента:" << std::endl;
+            std::wcin >> client_position;
+
+            auto client = client_instance.read(client_position - 1);
+
+            account->deposit = deposit;
+            account->client = client;
+
+            account_instance.update(account);
+
+            std::wcout << account << std::endl;
         }
 
         // 4. Создать счёт
@@ -212,7 +248,14 @@ int main(int argc, char** argv) {
         auto client_mapper_instance = client_mapper(&executor);
         auto account_mapper_instance = account_mapper(&executor, &deposit_mapper_instance, &client_mapper_instance);
 
-        menu(deposit_mapper_instance, client_mapper_instance, account_mapper_instance);
+        program:
+        try {
+            menu(deposit_mapper_instance, client_mapper_instance, account_mapper_instance);
+        }
+        catch (const std::exception& ex) {
+            std::wcerr << ex.what() << std::endl;
+            goto program;
+        }
     }
         /* Connection catch */
     catch (const std::exception& ex) {

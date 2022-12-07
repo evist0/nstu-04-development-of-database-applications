@@ -202,11 +202,7 @@ public:
                       "update accounts" << std::endl <<
                       "set " <<
                       "deposit_id=" << account->deposit->id.value() << ',' <<
-                      "client_id=" << account->client->id.value() << ',' <<
-                      "opening_date=" << '\'' << account->opening_date.year << '-' << account->opening_date.month << '-'
-                      << account->opening_date.day << '\'' << ',' <<
-                      "closing_date=" << '\'' << account->closing_date.year << '-' << account->closing_date.month << '-'
-                      << account->closing_date.day << '\'' << ',' <<
+                      "client_id=" << account->client->id.value() << std::endl <<
                       "where id = " << account->id.value() << std::endl <<
                       "returning *";
 
