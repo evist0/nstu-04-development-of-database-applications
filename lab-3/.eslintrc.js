@@ -20,8 +20,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
-    'plugin:react/recommended',
-    'plugin:react/jsx-runtime'
+    'plugin:react/recommended'
   ],
   settings: {
     'import/resolver': {
@@ -45,10 +44,15 @@ module.exports = {
     'import/order': [
       'error',
       {
-        groups: ['builtin', 'external', 'internal'],
+        groups: ['builtin', 'external', 'internal', ['parent', 'sibling']],
         pathGroups: [
           {
             pattern: 'react',
+            group: 'external',
+            position: 'before'
+          },
+          {
+            pattern: '/client/**',
             group: 'external',
             position: 'before'
           }

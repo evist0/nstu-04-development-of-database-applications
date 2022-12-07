@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import React, { StrictMode } from 'react'
 
 import { RouterProvider } from 'react-router-dom'
 

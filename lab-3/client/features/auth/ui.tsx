@@ -1,15 +1,23 @@
+import type { FC } from 'react'
+import React from 'react'
+
+import type { User } from '/client/shared/api'
+import { login } from '/client/shared/api'
+import { isTooManyRequestsError } from '/client/shared/lib/error-utils'
+import { FormInput } from '/client/shared/ui/form-input'
+
 import { LoadingButton } from '@mui/lab'
 import { Link, Stack } from '@mui/material'
 import { useForm } from 'react-hook-form'
 
-import { FormInput } from '/client/shared/ui/form-input'
-import { isTooManyRequestsError } from '/client/shared/lib/error-utils'
-import { login } from '/client/shared/api'
-
 import type { LoginData } from './model'
 import { defaultValues, resolver, FIELD_NAME_USERNAME, FIELD_NAME_PASSWORD } from './model'
 
-export const LoginForm = () => {
+type Props = {
+  onLogin?: (user: User) => void
+}
+
+export const LoginForm: FC<Props> = ({ onLogin }) => {
   const {
     control,
     handleSubmit,
@@ -19,12 +27,14 @@ export const LoginForm = () => {
 
   const onSubmit = async ({ username, password }: LoginData): Promise<void> => {
     try {
-      await login(username, password)
+      const user = await login(username, password)
+
+      if (onLogin) {
+        onLogin(user)
+      }
     } catch (e: unknown) {
       if (isTooManyRequestsError(e)) {
         // TODO: тостер "Много запросов"
-        // eslint-disable-next-line no-console
-        console.log('Много запросов')
         return
       }
 

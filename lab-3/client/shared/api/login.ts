@@ -1,13 +1,16 @@
 import { Meteor } from 'meteor/meteor'
 
-export function login(username: string, password: string): Promise<void> {
+import type { User } from './types'
+
+export function login(username: string, password: string): Promise<User> {
   return new Promise((resolve, reject) => {
     Meteor.loginWithPassword(username, password, (error) => {
       if (error) {
         reject(error)
       }
 
-      resolve()
+      const user = Meteor.user() as Meteor.User
+      resolve(user)
     })
   })
 }
