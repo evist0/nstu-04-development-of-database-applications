@@ -1,5 +1,10 @@
 declare module 'meteor/meteor' {
+  import type { Mongo } from 'meteor/mongo'
+
   namespace Meteor {
+    const roleAssignment: Mongo.Collection
+    const roles: Mongo.Collection
+
     interface UserProfile {
       name: string
       surname: string
@@ -8,6 +13,10 @@ declare module 'meteor/meteor' {
       passport: string
       address: string
       phone: string
+    }
+
+    interface User {
+      roles?: string[]
     }
   }
 }
@@ -125,6 +134,8 @@ declare module 'meteor/mongo' {
       addLinks<T extends Document>(links: Grapher.Link<T>): void
 
       addReducers(): void
+
+      helpers(helpers: Record<string, (...args: unknown[]) => unknown>): void
     }
   }
 }

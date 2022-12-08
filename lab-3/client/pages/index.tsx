@@ -1,7 +1,13 @@
 import React from 'react'
 
-import { DefaultLayout } from '/client/shared/ui/default-layout'
+import { useViewer } from '/client/entities/viewer'
 
-const IndexPage = () => <DefaultLayout>Hello from Index page</DefaultLayout>
+const IndexPage = () => {
+  const viewer = useViewer()
+
+  console.log(viewer)
+
+  return <h1>Hello from index page</h1>
+}
 
 export default IndexPage

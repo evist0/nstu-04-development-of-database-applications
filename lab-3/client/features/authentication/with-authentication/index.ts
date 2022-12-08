@@ -1,1 +1,6 @@
-export { withAuthentication, LOCATION_STATE_REDIRECT } from './lib'
+export {
+  withAuthentication,
+  withoutAuthentication,
+  withAuthenticationPredicateRedirect,
+  LOCATION_STATE_REDIRECT
+} from './lib'

@@ -23,3 +23,5 @@ react-meteor-data       # React higher-order component for reactively tracking M
 accounts-password
 alanning:roles
 cultofcoders:grapher
+dburles:collection-helpers
+random

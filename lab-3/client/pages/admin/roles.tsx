@@ -1,7 +1,21 @@
+import { RolesEnum } from '/common/entities/roles'
+
+import Button from '@mui/material/Button'
+
 import React from 'react'
 
 const RolesPage = () => {
-  return <h1>Hello from roles page</h1>
+  const onClick = () => {
+    Roles.addUsersToRoles('kGgcG9STpXumAJKG6', [RolesEnum.Admin])
+  }
+
+  return (
+    <>
+      <h1>Hello from roles page</h1>
+
+      <Button onClick={onClick}>Promote evist0</Button>
+    </>
+  )
 }
 
 export default RolesPage

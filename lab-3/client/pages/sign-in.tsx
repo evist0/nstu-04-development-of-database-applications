@@ -7,10 +7,7 @@ import { AuthLayout } from '/client/shared/ui/auth-layout'
 
 import { useLocation, useNavigate } from 'react-router-dom'
 
-type Props = {
-  redirectAfter?: string
-}
-const LoginPage: FC<Props> = () => {
+const SignInPage: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -25,4 +22,4 @@ const LoginPage: FC<Props> = () => {
   return <AuthLayout content={<SignInForm onSuccess={onSuccess} />} />
 }
 
-export default LoginPage
+export default SignInPage
