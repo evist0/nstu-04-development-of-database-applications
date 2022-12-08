@@ -2,7 +2,8 @@ import React from 'react'
 import type { FC, ReactNode } from 'react'
 
 import styled from '@emotion/styled'
-import { Stack, Typography } from '@mui/material'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 
 const FullHeightContainer = styled(Stack)`
   height: 100vh;

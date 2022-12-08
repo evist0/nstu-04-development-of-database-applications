@@ -1,5 +1,7 @@
 import React from 'react'
 
-const IndexPage = () => <div>Hello from main page</div>
+import { DefaultLayout } from '/client/shared/ui/default-layout'
+
+const IndexPage = () => <DefaultLayout>Hello from Index page</DefaultLayout>
 
 export default IndexPage

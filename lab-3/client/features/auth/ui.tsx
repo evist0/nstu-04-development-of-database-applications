@@ -6,8 +6,9 @@ import { login } from '/client/shared/api'
 import { isTooManyRequestsError } from '/client/shared/lib/error-utils'
 import { FormInput } from '/client/shared/ui/form-input'
 
-import { LoadingButton } from '@mui/lab'
-import { Link, Stack } from '@mui/material'
+import LoadingButton from '@mui/lab/LoadingButton'
+import Link from '@mui/material/Link'
+import Stack from '@mui/material/Stack'
 import { useForm } from 'react-hook-form'
 
 import type { LoginData } from './model'

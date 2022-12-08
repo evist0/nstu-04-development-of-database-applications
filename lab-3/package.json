@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.10.5",
     "@hookform/resolvers": "^2.9.10",
     "@loadable/component": "^5.15.2",
+    "@mui/icons-material": "^5.10.16",
     "@mui/lab": "^5.0.0-alpha.109",
     "@mui/material": "^5.10.15",
     "bcrypt": "^5.1.0",
