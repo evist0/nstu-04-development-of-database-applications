@@ -10,9 +10,9 @@ const schema = object({
   [FIELD_NAME_PASSWORD]: string().required('Введите пароль')
 })
 
-export type LoginData = InferType<typeof schema>
+export type SignInData = InferType<typeof schema>
 
-export const defaultValues: LoginData = {
+export const defaultValues: SignInData = {
   [FIELD_NAME_USERNAME]: '',
   [FIELD_NAME_PASSWORD]: ''
 }

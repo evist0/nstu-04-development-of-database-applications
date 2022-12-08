@@ -1,23 +1,19 @@
 import React from 'react'
 
-import { withAuth } from '/client/features/auth/lib'
+import { withAuthentication } from '/client/features/authentication/with-authentication'
 
 import loadable from '@loadable/component'
 import type { RouteObject } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
 
-const IndexPage = withAuth(loadable(() => import('/client/pages')))
-const LoginPage = loadable(() => import('/client/pages/login'))
-const RolesPage = withAuth(loadable(() => import('/client/pages/admin/roles')))
+const IndexPage = withAuthentication(loadable(() => import('/client/pages')))
+const RolesPage = withAuthentication(loadable(() => import('/client/pages/admin/roles')))
+const SignInPage = loadable(() => import('/client/pages/sign-in'))
 
 const routes: RouteObject[] = [
   {
     path: '/',
     element: <IndexPage />
-  },
-  {
-    path: 'login',
-    element: <LoginPage />
   },
   {
     path: 'admin',
@@ -27,6 +23,10 @@ const routes: RouteObject[] = [
         element: <RolesPage />
       }
     ]
+  },
+  {
+    path: 'sign-in',
+    element: <SignInPage />
   }
 ]
 

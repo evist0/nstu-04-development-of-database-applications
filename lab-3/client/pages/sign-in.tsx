@@ -1,8 +1,8 @@
 import type { FC } from 'react'
 import React from 'react'
 
-import { LoginForm } from '/client/features/auth'
-import { LOCATION_STATE_REDIRECT } from '/client/features/auth/lib'
+import { SignInForm } from '/client/features/authentication/sign-in'
+import { LOCATION_STATE_REDIRECT } from '/client/features/authentication/with-authentication'
 import { AuthLayout } from '/client/shared/ui/auth-layout'
 
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -14,7 +14,7 @@ const LoginPage: FC<Props> = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const onLogin = () => {
+  const onSuccess = () => {
     const redirect = location.state[LOCATION_STATE_REDIRECT]
 
     if (redirect) {
@@ -22,7 +22,7 @@ const LoginPage: FC<Props> = () => {
     }
   }
 
-  return <AuthLayout content={<LoginForm onLogin={onLogin} />} />
+  return <AuthLayout content={<SignInForm onSuccess={onSuccess} />} />
 }
 
 export default LoginPage

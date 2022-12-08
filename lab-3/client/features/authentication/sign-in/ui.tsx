@@ -11,27 +11,27 @@ import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import { useForm } from 'react-hook-form'
 
-import type { LoginData } from './model'
+import type { SignInData } from './model'
 import { defaultValues, resolver, FIELD_NAME_USERNAME, FIELD_NAME_PASSWORD } from './model'
 
 type Props = {
-  onLogin?: (user: User) => void
+  onSuccess?: (user: User) => void
 }
 
-export const LoginForm: FC<Props> = ({ onLogin }) => {
+export const SignInForm: FC<Props> = ({ onSuccess }) => {
   const {
     control,
     handleSubmit,
     formState: { isSubmitting },
     setError
-  } = useForm<LoginData>({ defaultValues, resolver })
+  } = useForm<SignInData>({ defaultValues, resolver })
 
-  const onSubmit = async ({ username, password }: LoginData): Promise<void> => {
+  const onSubmit = async ({ username, password }: SignInData): Promise<void> => {
     try {
       const user = await login(username, password)
 
-      if (onLogin) {
-        onLogin(user)
+      if (onSuccess) {
+        onSuccess(user)
       }
     } catch (e: unknown) {
       if (isTooManyRequestsError(e)) {

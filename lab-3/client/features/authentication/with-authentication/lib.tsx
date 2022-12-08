@@ -13,7 +13,7 @@ type Component = FC<Props> | LoadableComponent<Props>
 
 export const LOCATION_STATE_REDIRECT = 'redirect'
 
-export const withAuth = (Component: Component, loginRedirect = '/login') => {
+export const withAuthentication = (Component: Component, signInRedirect = '/sign-in') => {
   const WrappedComponent = (props: Record<string, unknown>) => {
     const isAccountsReady = useIsAccountsReady()
     const viewer = useViewer()
@@ -24,13 +24,13 @@ export const withAuth = (Component: Component, loginRedirect = '/login') => {
     }
 
     if (!viewer) {
-      return <Navigate to={loginRedirect} state={{ [LOCATION_STATE_REDIRECT]: location }} replace />
+      return <Navigate to={signInRedirect} state={{ [LOCATION_STATE_REDIRECT]: location }} replace />
     }
 
     return <Component {...props} />
   }
 
-  WrappedComponent.displayName = 'withAuth'
+  WrappedComponent.displayName = 'requireAuthentication'
 
   return WrappedComponent
 }
