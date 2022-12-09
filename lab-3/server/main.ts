@@ -3,8 +3,6 @@ import { RolesEnum } from '/common/entities/roles'
 import { Accounts } from 'meteor/accounts-base'
 import { Meteor } from 'meteor/meteor'
 
-import User = Meteor.User
-
 const ADMIN_USERNAME = 'admin'
 const ADMIN_PASSWORD = '123456As'
 
@@ -16,43 +14,30 @@ Meteor.startup(async () => {
     })
   }
 
-  const admin = Accounts.findUserByUsername(ADMIN_USERNAME) as User
+  const admin = Accounts.findUserByUsername(ADMIN_USERNAME) as Meteor.User
 
   if (!Roles.userIsInRole(admin._id, RolesEnum.Admin)) {
     Roles.addUsersToRoles(admin._id, RolesEnum.Admin)
   }
 })
 
-Meteor.publish(null, function () {
+Meteor.methods({
+  setUserRole() {
+    console.log('setUserRole')
+  }
+})
+
+Meteor.publish('roleAssignment', function () {
   if (!this.userId) {
     return this.ready()
-  }
-
-  const canAccessAllRoles = Roles.userIsInRole(this.userId, RolesEnum.Admin)
-
-  if (canAccessAllRoles) {
-    return Meteor.roleAssignment.find()
   }
 
   return Meteor.roleAssignment.find({ 'user._id': this.userId })
 })
 
-Meteor.publish('roles', function () {
-  if (!this.userId) {
-    return this.ready()
-  }
-
-  const canAccessAllRoles = Roles.userIsInRole(this.userId, RolesEnum.Admin)
-
-  if (!canAccessAllRoles) {
-    return this.ready()
-  }
-
-  return Meteor.roles.find()
-})
-
-Accounts.onCreateUser((_, user) => {
+Accounts.onCreateUser(({ profile }, user: Meteor.User) => {
   user._id = Random.id()
+  user.profile = profile as Meteor.UserProfile
 
   Roles.addUsersToRoles(user._id, RolesEnum.User)
 
