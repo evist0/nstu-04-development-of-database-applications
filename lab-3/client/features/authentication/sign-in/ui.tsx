@@ -4,7 +4,7 @@ import React from 'react'
 import type { User } from '/client/shared/api'
 import { signIn } from '/client/shared/api'
 import { isTooManyRequestsError } from '/client/shared/lib/error-utils'
-import { FormInput } from '/client/shared/ui/form-input'
+import { Input } from '/client/shared/ui/input'
 
 import LoadingButton from '@mui/lab/LoadingButton'
 import Link from '@mui/material/Link'
@@ -48,8 +48,8 @@ export const SignInForm: FC<Props> = ({ onSuccess }) => {
   return (
     <Stack width={'100%'} component={'form'} spacing={2} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
-        <FormInput name={FIELD_NAME_USERNAME} control={control} label={'Имя пользователя'} />
-        <FormInput name={FIELD_NAME_PASSWORD} control={control} label={'Пароль'} type={'password'} />
+        <Input name={FIELD_NAME_USERNAME} control={control} label={'Имя пользователя'} />
+        <Input name={FIELD_NAME_PASSWORD} control={control} label={'Пароль'} type={'password'} />
       </Stack>
 
       <Stack alignItems={'center'} spacing={2}>

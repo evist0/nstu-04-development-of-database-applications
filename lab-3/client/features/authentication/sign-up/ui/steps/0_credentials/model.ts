@@ -1,3 +1,5 @@
+import type { SignUpPayload } from '/client/shared/api'
+
 import { yupResolver } from '@hookform/resolvers/yup'
 import type { InferType } from 'yup'
 import { object, ref, string } from 'yup'
@@ -21,7 +23,8 @@ const schema = object({
   [FIELD_NAME_PASSWORD]: string()
     .required('Пароль обязателен')
     .min(6, 'Минимальная длина пароля — 6 символов')
-    .max(50, 'Максимальная длина пароля — 50 символов'),
+    .max(50, 'Максимальная длина пароля — 50 символов')
+    .trim('Без пробелов в начале и в конце'),
   [FIELD_NAME_PASSWORD_REPEAT]: string()
     .required('Подтвердите пароль')
     .oneOf([ref(FIELD_NAME_PASSWORD)], 'Введённые пароли должны совпадать')
@@ -38,9 +41,9 @@ export const transformPayload = (payload: RawPayload): Payload => ({
 
 export const resolver = yupResolver(schema)
 
-export const defaultValues: RawPayload = {
-  [FIELD_NAME_USERNAME]: '',
-  [FIELD_NAME_EMAIL]: '',
-  [FIELD_NAME_PASSWORD]: '',
-  [FIELD_NAME_PASSWORD_REPEAT]: ''
-}
+export const getDefaultValues = (state: Partial<SignUpPayload>) => ({
+  [FIELD_NAME_USERNAME]: state[FIELD_NAME_USERNAME] ?? '',
+  [FIELD_NAME_EMAIL]: state[FIELD_NAME_EMAIL] ?? '',
+  [FIELD_NAME_PASSWORD]: state[FIELD_NAME_PASSWORD] ?? '',
+  [FIELD_NAME_PASSWORD_REPEAT]: state[FIELD_NAME_PASSWORD] ?? ''
+})

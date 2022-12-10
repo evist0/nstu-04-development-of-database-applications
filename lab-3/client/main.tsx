@@ -4,7 +4,7 @@ import { App } from '/client/app'
 
 import { Meteor } from 'meteor/meteor'
 import { Tracker } from 'meteor/tracker'
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 
 Meteor.startup(() => {
   Tracker.autorun(() => {
@@ -12,5 +12,12 @@ Meteor.startup(() => {
     Meteor.subscribe('roles')
   })
 
-  render(<App />, document.getElementById('react-target'))
+  const target = document.getElementById('react-target')
+
+  if (!target) {
+    throw Error('div#react-target was not found')
+  }
+
+  const root = createRoot(target)
+  root.render(<App />)
 })

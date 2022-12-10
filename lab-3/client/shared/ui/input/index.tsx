@@ -10,7 +10,7 @@ type Props<T extends FieldValues> = {
   control: Control<T, object>
 } & Omit<TextFieldProps, 'name'>
 
-export const FormInput = <T extends FieldValues>({ name, control, ...fieldProps }: Props<T>) => {
+export const Input = <T extends FieldValues>({ name, control, ...fieldProps }: Props<T>) => {
   return (
     <Controller
       name={name}

@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import React from 'react'
 
-import { FormInput } from '/client/shared/ui/form-input'
+import { Input } from '/client/shared/ui/input'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -12,19 +12,19 @@ import type { StepControls } from '../../../lib'
 import { useFormData } from '../../../lib'
 import type { RawPayload } from './model'
 import {
-  defaultValues,
   FIELD_NAME_EMAIL,
   FIELD_NAME_PASSWORD,
   FIELD_NAME_PASSWORD_REPEAT,
   FIELD_NAME_USERNAME,
+  getDefaultValues,
   resolver,
   transformPayload
 } from './model'
 
-export const CredentialsStep: FC<StepControls> = ({ onPrevious, onNext }) => {
-  const { control, handleSubmit } = useForm<RawPayload>({ resolver, defaultValues })
+export const CredentialsStep: FC<StepControls> = ({ onNext }) => {
+  const { values, setValues } = useFormData()
 
-  const { setValues } = useFormData()
+  const { control, handleSubmit } = useForm<RawPayload>({ resolver, defaultValues: getDefaultValues(values) })
 
   const onSubmit = (values: RawPayload) => {
     if (!onNext) {
@@ -40,15 +40,13 @@ export const CredentialsStep: FC<StepControls> = ({ onPrevious, onNext }) => {
   return (
     <Box component={'form'} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
-        <FormInput name={FIELD_NAME_USERNAME} control={control} label={'Имя пользователя'} />
-        <FormInput name={FIELD_NAME_EMAIL} control={control} label={'Электронная почта'} type={'email'} />
-        <FormInput name={FIELD_NAME_PASSWORD} control={control} label={'Пароль'} type={'password'} />
-        <FormInput name={FIELD_NAME_PASSWORD_REPEAT} control={control} label={'Повторите пароль'} type={'password'} />
+        <Input name={FIELD_NAME_USERNAME} control={control} label={'Имя пользователя'} />
+        <Input name={FIELD_NAME_EMAIL} control={control} label={'Электронная почта'} type={'email'} />
+        <Input name={FIELD_NAME_PASSWORD} control={control} label={'Пароль'} type={'password'} />
+        <Input name={FIELD_NAME_PASSWORD_REPEAT} control={control} label={'Повторите пароль'} type={'password'} />
       </Stack>
 
-      <Stack direction={'row'} justifyContent={'space-between'}>
-        <Button onClick={onPrevious}>Назад</Button>
-
+      <Stack direction={'row-reverse'} justifyContent={'space-between'}>
         <Button type={'submit'}>Вперед</Button>
       </Stack>
     </Box>

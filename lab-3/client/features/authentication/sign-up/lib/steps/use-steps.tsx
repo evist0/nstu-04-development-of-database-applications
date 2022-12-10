@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
-import type { Step, UseStepResult } from './types'
+import type { Step, StepControls, UseStepResult } from './types'
 
-export const useSteps = (stepsMap: Step[], onFinish: () => void): UseStepResult => {
+export const useSteps = (stepsMap: Step[], onFinish: StepControls['onFinish']): UseStepResult => {
   const [step, setStep] = useState(0)
 
   const onNext = () => {
@@ -21,7 +21,13 @@ export const useSteps = (stepsMap: Step[], onFinish: () => void): UseStepResult 
     setStep((step) => step - 1)
   }
 
-  const currentContent = stepsMap[step].content({ onNext, onPrevious, onFinish })
+  const Component = stepsMap[step].content
+
+  if (!Component) {
+    throw Error(`Component is not defiened for step ${step}`)
+  }
+
+  const currentContent = <Component onNext={onNext} onPrevious={onPrevious} onFinish={onFinish} />
 
   return { step, setStep, currentContent }
 }

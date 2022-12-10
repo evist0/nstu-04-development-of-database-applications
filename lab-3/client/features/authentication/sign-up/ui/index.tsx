@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import React from 'react'
 
 import type { User } from '/client/shared/api'
+import { signUp } from '/client/shared/api'
 
 import Box from '@mui/material/Box'
 import MuiStep from '@mui/material/Step'
@@ -9,21 +10,30 @@ import MuiStepLabel from '@mui/material/StepLabel'
 import Stepper from '@mui/material/Stepper'
 
 import type { Step } from '../lib'
-import { withFormDataProvider, useSteps } from '../lib'
-import { STEPS } from '../model'
+import { useFormData, useSteps, withFormDataProvider } from '../lib'
+import { schema, STEPS } from '../model'
 
 type Props = {
-  onSuccess?: (user: User) => void
+  onSuccess?: (user: User) => Promise<void> | void
 }
 
 const SignUpFormBase: FC<Props> = ({ onSuccess }) => {
-  const onFinish = () => {
-    if (onSuccess) {
-      // onSuccess(null as unknown as User)
-    }
+  const { values } = useFormData()
 
-    // eslint-disable-next-line no-console
-    console.log('Submit')
+  const onFinish = async () => {
+    try {
+      const payload = await schema.validate(values)
+      const user = await signUp(payload)
+
+      if (onSuccess) {
+        onSuccess(user)
+      }
+    } catch (e) {
+      //TODO: тостер "Пользователь с таким логином или почтой уже существует"
+
+      // eslint-disable-next-line no-console
+      console.error(e)
+    }
   }
 
   const { step, currentContent } = useSteps(STEPS, onFinish)
@@ -43,4 +53,4 @@ const SignUpFormBase: FC<Props> = ({ onSuccess }) => {
   )
 }
 
-export const SignUpForm = withFormDataProvider(SignUpFormBase)
+export const SignUpForm: FC<Props> = withFormDataProvider(SignUpFormBase)
