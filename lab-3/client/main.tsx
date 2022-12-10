@@ -6,10 +6,11 @@ import { Meteor } from 'meteor/meteor'
 import { Tracker } from 'meteor/tracker'
 import { render } from 'react-dom'
 
-Tracker.autorun(() => {
-  Meteor.subscribe('roleAssignment')
-})
-
 Meteor.startup(() => {
+  Tracker.autorun(() => {
+    Meteor.subscribe('roleAssignment')
+    Meteor.subscribe('roles')
+  })
+
   render(<App />, document.getElementById('react-target'))
 })

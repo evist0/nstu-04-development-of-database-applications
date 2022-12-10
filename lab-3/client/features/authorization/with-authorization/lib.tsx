@@ -6,7 +6,7 @@ import type { User } from '/client/shared/api'
 import { useIsAccountsReady } from '/client/shared/lib/meteor-utils'
 import { LoadingLayout } from '/client/shared/ui/loading-layout'
 
-import type { RolesEnum } from '/common/entities/roles'
+import type { RolesEnum } from '/imports/entities/roles'
 
 import type { LoadableComponent } from '@loadable/component'
 import { Navigate } from 'react-router-dom'
@@ -27,8 +27,6 @@ export const withAuthorization = (Component: Component, options: WithAuthorizati
     const viewer = useViewer() as User
 
     const roles = Roles.getRolesForUser(viewer._id)
-
-    console.log(roles)
 
     if (!isAccountsReady) {
       return <LoadingLayout />

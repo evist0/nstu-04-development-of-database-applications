@@ -1,4 +1,4 @@
-import { RolesEnum } from '/common/entities/roles'
+import { RolesEnum } from '/imports/entities/roles'
 
 import { Accounts } from 'meteor/accounts-base'
 import { Meteor } from 'meteor/meteor'
@@ -23,6 +23,7 @@ Meteor.startup(async () => {
 
 Meteor.methods({
   setUserRole() {
+    // eslint-disable-next-line no-console
     console.log('setUserRole')
   }
 })
@@ -33,6 +34,23 @@ Meteor.publish('roleAssignment', function () {
   }
 
   return Meteor.roleAssignment.find({ 'user._id': this.userId })
+})
+
+Meteor.publish('userData', function () {
+  if (this.userId) {
+    return Meteor.users.find(
+      { _id: this.userId },
+      {
+        fields: { profile: 1, emails: 1 }
+      }
+    )
+  }
+
+  return this.ready()
+})
+
+Meteor.publish('roles', function () {
+  return Meteor.roles.find()
 })
 
 Accounts.onCreateUser(({ profile }, user: Meteor.User) => {

@@ -36,8 +36,8 @@
   "include": [
     "typings.d.ts",
     "client",
-    "common",
-    "server",
+    "imports",
+    "server"
   ],
   "exclude": [
     "./.meteor/**",

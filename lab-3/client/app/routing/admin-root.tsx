@@ -4,7 +4,7 @@ import { withAuthorization } from '/client/features/authorization/with-authoriza
 import type { WithAuthorizationOptions } from '/client/features/authorization/with-authorization/lib'
 import { LoadingLayout } from '/client/shared/ui/loading-layout'
 
-import { RolesEnum } from '/common/entities/roles'
+import { RolesEnum } from '/imports/entities/roles'
 
 import { Outlet, useNavigation } from 'react-router-dom'
 

@@ -16,8 +16,6 @@ export function signIn(username: string, password: string): Promise<User> {
 }
 
 export function signUp(payload: CreateUser): Promise<User> {
-  console.log(payload)
-
   return new Promise((resolve, reject) => {
     Accounts.createUser(payload, (error) => {
       if (error) {

@@ -57,7 +57,7 @@ export const SignInForm: FC<Props> = ({ onSuccess }) => {
           Войти
         </LoadingButton>
 
-        <Link href="/authentication/sign-up">Регистрация</Link>
+        <Link href="/authentication/sign-up">Зарегистрироваться</Link>
       </Stack>
     </Stack>
   )

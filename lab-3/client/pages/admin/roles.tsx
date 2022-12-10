@@ -1,4 +1,4 @@
-import { RolesEnum } from '/common/entities/roles'
+import { RolesEnum } from '/imports/entities/roles'
 
 import Button from '@mui/material/Button'
 
