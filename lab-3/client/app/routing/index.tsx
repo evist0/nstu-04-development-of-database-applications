@@ -1,11 +1,10 @@
 import React from 'react'
 
-import { AdminRoot } from '/client/app/routing/admin-root'
-
 import loadable from '@loadable/component'
 import type { RouteObject } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
 
+import { AdminRoot } from './admin-root'
 import { AuthenticatedRoot } from './authenticated-root'
 import { UnauthenticatedRoot } from './unauthenticated-root'
 

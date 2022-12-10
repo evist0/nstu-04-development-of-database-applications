@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { withAuthorization } from '/client/features/authorization/with-authorization'
-import type { WithAuthorizationOptions } from '/client/features/authorization/with-authorization/lib'
+import type { WithAuthorizationOptions } from '/client/features/authorization/with-authorization'
 import { LoadingLayout } from '/client/shared/ui/loading-layout'
 
 import { RolesEnum } from '/imports/entities/roles'

@@ -1,1 +1,1 @@
-export { withAuthorization } from './lib'
+export { withAuthorization, WithAuthorizationOptions } from './lib'

@@ -1,7 +1,6 @@
 import type { FC } from 'react'
 import React from 'react'
 
-import { withFormDataProvider } from '/client/features/authentication/sign-up/lib/form-data'
 import type { User } from '/client/shared/api'
 
 import Box from '@mui/material/Box'
@@ -10,7 +9,7 @@ import MuiStepLabel from '@mui/material/StepLabel'
 import Stepper from '@mui/material/Stepper'
 
 import type { Step } from '../lib'
-import { useSteps } from '../lib'
+import { withFormDataProvider, useSteps } from '../lib'
 import { STEPS } from '../model'
 
 type Props = {
