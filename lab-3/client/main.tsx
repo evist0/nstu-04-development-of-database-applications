@@ -8,8 +8,9 @@ import { createRoot } from 'react-dom/client'
 
 Meteor.startup(() => {
   Tracker.autorun(() => {
-    Meteor.subscribe('roleAssignment')
     Meteor.subscribe('roles')
+    Meteor.subscribe('roleAssignment')
+    Meteor.subscribe('userData')
   })
 
   const target = document.getElementById('react-target')

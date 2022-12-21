@@ -8,8 +8,8 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { useForm } from 'react-hook-form'
 
-import type { StepControls } from '../../../lib'
-import { useFormData } from '../../../lib'
+import type { StepControls } from '../../lib'
+import { useFormData } from '../../lib'
 import type { RawPayload } from './model'
 import {
   FIELD_NAME_EMAIL,

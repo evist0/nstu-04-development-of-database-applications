@@ -9,19 +9,21 @@ import MuiStep from '@mui/material/Step'
 import MuiStepLabel from '@mui/material/StepLabel'
 import Stepper from '@mui/material/Stepper'
 
-import type { Step } from '../lib'
-import { useFormData, useSteps, withFormDataProvider } from '../lib'
-import { schema, STEPS } from '../model'
+import type { Step } from './lib'
+import { useFormData, useSteps, withFormDataProvider } from './lib'
+import { schema, STEPS } from './model'
 
 type Props = {
   onSuccess?: (user: User) => Promise<void> | void
 }
 
-const SignUpFormBase: FC<Props> = ({ onSuccess }) => {
+const CreateUserFormBase: FC<Props> = ({ onSuccess }) => {
   const { values } = useFormData()
 
   const onFinish = async () => {
     try {
+      console.log(values)
+
       const payload = await schema.validate(values)
       const user = await signUp(payload)
 
@@ -29,9 +31,6 @@ const SignUpFormBase: FC<Props> = ({ onSuccess }) => {
         onSuccess(user)
       }
     } catch (e) {
-      //TODO: тостер "Пользователь с таким логином или почтой уже существует"
-
-      // eslint-disable-next-line no-console
       console.error(e)
     }
   }
@@ -53,4 +52,4 @@ const SignUpFormBase: FC<Props> = ({ onSuccess }) => {
   )
 }
 
-export const SignUpForm: FC<Props> = withFormDataProvider(SignUpFormBase)
+export const CreateUserForm: FC<Props> = withFormDataProvider(CreateUserFormBase)

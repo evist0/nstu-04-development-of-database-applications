@@ -1,4 +1,4 @@
-import type { SignUpPayload } from '/client/shared/api'
+import type { CreateUserPayload } from '/client/shared/api'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import type { InferType } from 'yup'
@@ -41,7 +41,7 @@ export const transformPayload = (payload: RawPayload): Payload => ({
 
 export const resolver = yupResolver(schema)
 
-export const getDefaultValues = (state: Partial<SignUpPayload>) => ({
+export const getDefaultValues = (state: Partial<CreateUserPayload>) => ({
   [FIELD_NAME_USERNAME]: state[FIELD_NAME_USERNAME] ?? '',
   [FIELD_NAME_EMAIL]: state[FIELD_NAME_EMAIL] ?? '',
   [FIELD_NAME_PASSWORD]: state[FIELD_NAME_PASSWORD] ?? '',

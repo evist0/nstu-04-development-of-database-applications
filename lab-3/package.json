@@ -22,6 +22,7 @@
     "bcrypt": "^5.1.0",
     "compose-function": "^3.0.3",
     "dotenv": "^16.0.3",
+    "material-react-table": "^1.4.0",
     "meteor-node-stubs": "^1.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -2,18 +2,16 @@ import React from 'react'
 
 import loadable from '@loadable/component'
 import type { RouteObject } from 'react-router-dom'
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 
-import { AdminRoot } from './admin-root'
 import { AuthenticatedRoot } from './authenticated-root'
 import { UnauthenticatedRoot } from './unauthenticated-root'
 
-const RolesPage = loadable(() => import('/client/pages/admin/roles'))
+const UsersPage = loadable(() => import('/client/pages/users'))
+const TariffsPage = loadable(() => import('/client/pages/tariffs'))
+const DepositsPage = loadable(() => import('/client/pages/deposits'))
 
-const IndexPage = loadable(() => import('/client/pages'))
-
-const SignInPage = loadable(() => import('/client/pages/sign-in'))
-const SignUpPage = loadable(() => import('/client/pages/sign-up'))
+const SignInPage = loadable(() => import('/client/pages/authentication/sign-in'))
 
 const NotFoundPage = loadable(() => import('/client/pages/404'))
 
@@ -24,17 +22,19 @@ const routes: RouteObject[] = [
     children: [
       {
         path: '/',
-        element: <IndexPage />
+        element: <Navigate to={'/users'} replace />
       },
       {
-        path: 'admin',
-        element: <AdminRoot />,
-        children: [
-          {
-            path: 'roles',
-            element: <RolesPage />
-          }
-        ]
+        path: 'users',
+        element: <UsersPage />
+      },
+      {
+        path: 'tariffs',
+        element: <TariffsPage />
+      },
+      {
+        path: 'deposits',
+        element: <DepositsPage />
       }
     ]
   },
@@ -45,16 +45,16 @@ const routes: RouteObject[] = [
       {
         path: 'sign-in',
         element: <SignInPage />
-      },
-      {
-        path: 'sign-up',
-        element: <SignUpPage />
       }
     ]
   },
   {
-    path: '*',
+    path: '404',
     element: <NotFoundPage />
+  },
+  {
+    path: '*',
+    element: <Navigate to={'/404'} replace />
   }
 ]
 

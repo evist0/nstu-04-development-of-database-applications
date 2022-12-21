@@ -3,6 +3,8 @@ import { RolesEnum } from '/imports/entities/roles'
 import { Accounts } from 'meteor/accounts-base'
 import { Meteor } from 'meteor/meteor'
 
+import UserProfile = Meteor.UserProfile
+
 const ADMIN_USERNAME = 'admin'
 const ADMIN_PASSWORD = '123456As'
 
@@ -22,35 +24,49 @@ Meteor.startup(async () => {
 })
 
 Meteor.methods({
-  setUserRole() {
-    // eslint-disable-next-line no-console
-    console.log('setUserRole')
+  createUserAsAdmin(user: { username: string; email: string; password: string; profile: UserProfile }) {
+    if (!this.userId) {
+      throw new Error('401')
+    }
+
+    const isAdmin = Roles.userIsInRole(this.userId, RolesEnum.Admin)
+
+    if (!isAdmin) {
+      throw new Error('403')
+    }
+
+    const id = Accounts.createUser(user)
+    return Meteor.users.find({ _id: id }).fetch()[0]
   }
+})
+
+Meteor.publish('roles', function () {
+  return Meteor.roles.find()
 })
 
 Meteor.publish('roleAssignment', function () {
   if (!this.userId) {
-    return this.ready()
+    this.ready()
+    return
   }
 
   return Meteor.roleAssignment.find({ 'user._id': this.userId })
 })
 
 Meteor.publish('userData', function () {
-  if (this.userId) {
-    return Meteor.users.find(
-      { _id: this.userId },
-      {
-        fields: { profile: 1, emails: 1 }
-      }
-    )
+  if (!this.userId) {
+    this.ready()
+    return
   }
 
-  return this.ready()
-})
+  const isAdmin = Roles.userIsInRole(this.userId, RolesEnum.Admin)
+  const opts = { fields: { username: 1, emails: 1, profile: 1 } }
 
-Meteor.publish('roles', function () {
-  return Meteor.roles.find()
+  if (isAdmin) {
+    return Meteor.users.find({}, opts)
+  }
+
+  return Meteor.users.find({ _id: this.userId }, opts)
 })
 
 Accounts.onCreateUser(({ profile }, user: Meteor.User) => {

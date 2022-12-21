@@ -7,6 +7,21 @@ import { LoadingLayout } from '/client/shared/ui/loading-layout'
 
 import { Outlet, useNavigation } from 'react-router-dom'
 
+const NAVIGATION = [
+  {
+    path: '/users',
+    name: 'Пользователи'
+  },
+  {
+    path: '/tariffs',
+    name: 'Тарифы'
+  },
+  {
+    path: '/deposits',
+    name: 'Счета'
+  }
+]
+
 export const AuthenticatedRoot = withAuthentication(
   () => {
     const navigation = useNavigation()
@@ -16,7 +31,7 @@ export const AuthenticatedRoot = withAuthentication(
     }
 
     return (
-      <DefaultLayout profile={<SignOutButton />}>
+      <DefaultLayout profile={<SignOutButton />} navigation={NAVIGATION}>
         <Outlet />
       </DefaultLayout>
     )

@@ -1,15 +1,15 @@
-import type { Dispatch, FC, PropsWithChildren } from 'react'
+import type { Dispatch, FC, PropsWithChildren, SetStateAction } from 'react'
 import React, { createContext, useContext, useState } from 'react'
 
-import type { SignUpPayload } from '/client/shared/api'
+import type { CreateUserPayload } from '/client/shared/api'
 
 type Context<T = never> = {
   values: T
-  setValues: Dispatch<T>
+  setValues: Dispatch<SetStateAction<T>>
 }
 
-const defaultContext = { values: null, setValues: null } as unknown as Context<Partial<SignUpPayload>>
-const FormContext = createContext<Context<Partial<SignUpPayload>>>(defaultContext)
+const defaultContext = { values: null, setValues: null } as unknown as Context<Partial<CreateUserPayload>>
+const FormContext = createContext<Context<Partial<CreateUserPayload>>>(defaultContext)
 
 const FormDataProvider: FC<PropsWithChildren> = ({ children }) => {
   const [data, setData] = useState({})

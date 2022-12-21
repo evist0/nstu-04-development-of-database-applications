@@ -8,10 +8,11 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import { flushSync } from 'react-dom'
 import { useForm } from 'react-hook-form'
 
-import type { StepControls } from '../../../lib'
-import { useFormData } from '../../../lib'
+import type { StepControls } from '../../lib'
+import { useFormData } from '../../lib'
 import type { RawPayload } from './model'
 import {
   FIELD_NAME_ADDRESS,
@@ -38,7 +39,11 @@ export const ContactInfoStep: FC<StepControls> = ({ onPrevious, onFinish }) => {
     }
 
     const transformedValues = transformPayload(values)
-    setValues(transformedValues)
+
+    // Wait for setState before submit form
+    flushSync(() => {
+      setValues(transformedValues)
+    })
 
     onFinish()
   }

@@ -3,10 +3,15 @@ import React, { useState } from 'react'
 
 import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
 import Stack from '@mui/material/Stack'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
+import { Link } from 'react-router-dom'
 
+import type { Navigation } from './model'
 import { Drawer } from './ui/drawer'
 import { Header } from './ui/header'
 import { MenuButton } from './ui/menu-button'
@@ -14,9 +19,10 @@ import { MenuButton } from './ui/menu-button'
 type Props = {
   profile?: ReactNode
   children?: ReactNode
+  navigation?: Navigation[]
 }
 
-export const DefaultLayout: FC<Props> = ({ children, profile }) => {
+export const DefaultLayout: FC<Props> = ({ children, profile, navigation }) => {
   const [menuOpened, setMenuOpened] = useState(false)
 
   const onToggle = () => {
@@ -47,12 +53,26 @@ export const DefaultLayout: FC<Props> = ({ children, profile }) => {
           <ButtonAndLogo />
         </Toolbar>
         <Divider />
+        <List>
+          {navigation?.map(({ path, name }, index) => (
+            <Link to={path} key={index} onClick={onClose}>
+              <ListItem>
+                <ListItemText primary={name} />
+              </ListItem>
+            </Link>
+          ))}
+        </List>
       </Drawer>
 
-      <Container>
+      <Container maxWidth="xl">
         <Toolbar />
-        {children}
+
+        <Stack mt={4} alignItems={'center'}>
+          {children}
+        </Stack>
       </Container>
     </>
   )
 }
+
+export type { Navigation }

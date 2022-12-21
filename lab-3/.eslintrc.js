@@ -35,7 +35,6 @@ module.exports = {
     }
   },
   rules: {
-    'no-console': 'error',
     '@typescript-eslint/consistent-type-imports': 'error',
     'import/no-named-as-default-member': 'error',
     'import/no-default-export': 'error',

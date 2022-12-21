@@ -7,7 +7,6 @@ import { isTooManyRequestsError } from '/client/shared/lib/error-utils'
 import { Input } from '/client/shared/ui/input'
 
 import LoadingButton from '@mui/lab/LoadingButton'
-import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import { useForm } from 'react-hook-form'
 
@@ -35,7 +34,7 @@ export const SignInForm: FC<Props> = ({ onSuccess }) => {
       }
     } catch (e: unknown) {
       if (isTooManyRequestsError(e)) {
-        // TODO: тостер "Много запросов"
+        console.error('Too many requests!')
         return
       }
 
@@ -56,8 +55,6 @@ export const SignInForm: FC<Props> = ({ onSuccess }) => {
         <LoadingButton type={'submit'} variant={'contained'} size={'large'} fullWidth={true} loading={isSubmitting}>
           Войти
         </LoadingButton>
-
-        <Link href="/authentication/sign-up">Зарегистрироваться</Link>
       </Stack>
     </Stack>
   )

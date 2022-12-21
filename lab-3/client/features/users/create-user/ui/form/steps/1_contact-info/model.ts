@@ -1,4 +1,4 @@
-import type { SignUpPayload } from '/client/shared/api'
+import type { CreateUserPayload } from '/client/shared/api'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import type { InferType } from 'yup'
@@ -53,7 +53,7 @@ export const transformPayload = (payload: RawPayload): Payload => {
 
 export const resolver = yupResolver(schema)
 
-export const getDefaultValues = ({ profile }: Partial<SignUpPayload>): RawPayload => {
+export const getDefaultValues = ({ profile }: Partial<CreateUserPayload>): RawPayload => {
   const DEFAULT_PHONE = '+7 ('
 
   if (!profile) {
