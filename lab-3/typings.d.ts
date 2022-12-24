@@ -119,7 +119,6 @@ declare module 'meteor/cultofcoders:grapher' {
 
 declare module 'meteor/mongo' {
   import type { Grapher } from 'meteor/cultofcoders:grapher'
-  import type { Document } from 'mongodb'
 
   namespace Mongo {
     interface Collection<T = AnyObject> {
@@ -131,7 +130,8 @@ declare module 'meteor/mongo' {
 
       expose: Grapher.Exposure
 
-      addLinks<T extends Document>(links: Grapher.Link<T>): void
+      // eslint-disable-next-line
+      addLinks(links: Grapher.Link<any>): void
 
       addReducers(): void
 

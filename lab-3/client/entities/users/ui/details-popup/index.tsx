@@ -1,22 +1,20 @@
 import type { FC, ReactNode } from 'react'
 import React, { useState } from 'react'
 
-import type { User } from '/client/shared/api'
+import type { User, UserProfile } from '/client/shared/api'
 import { Modal } from '/client/shared/ui/modal'
 
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { Meteor } from 'meteor/meteor'
-
-import UserProfile = Meteor.UserProfile
 
 type Props = {
   user: User
+  modalContent?: ReactNode
   children: ReactNode
 }
 
-export const UserDetailsPopup: FC<Props> = ({ user, children }) => {
+export const UserDetailsPopup: FC<Props> = ({ user, modalContent, children }) => {
   const [open, setOpen] = useState(false)
   const profile: UserProfile | undefined = user.profile
 
@@ -52,10 +50,14 @@ export const UserDetailsPopup: FC<Props> = ({ user, children }) => {
             <Typography fontWeight={500}>Адрес:</Typography>
             <Typography>{profile?.address}</Typography>
           </Stack>
+
+          {modalContent}
         </Box>
       </Modal>
 
-      <Box onClick={onOpen}>{children}</Box>
+      <Box onClick={onOpen} sx={{ cursor: 'pointer' }}>
+        {children}
+      </Box>
     </>
   )
 }

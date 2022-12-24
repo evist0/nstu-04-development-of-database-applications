@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "prepare": "cd ../ && husky install",
-    "start": "cross-env MONGO_URL=mongodb://localhost:27017/admin meteor run",
+    "start": "cross-env MONGO_URL=mongodb://localhost:27017/test meteor run",
     "test:eslint": "yarn eslint --ext .jsx,.js,.ts,.tsx .",
     "test:prettier": "yarn prettier . --ignore-path .gitignore --check",
     "test": "meteor test --once --driver-package meteortesting:mocha",

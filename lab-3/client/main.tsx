@@ -10,7 +10,9 @@ Meteor.startup(() => {
   Tracker.autorun(() => {
     Meteor.subscribe('roles')
     Meteor.subscribe('roleAssignment')
-    Meteor.subscribe('userData')
+    Meteor.subscribe('users')
+    Meteor.subscribe('tariffs')
+    Meteor.subscribe('deposits')
   })
 
   const target = document.getElementById('react-target')

@@ -15,10 +15,6 @@ const NAVIGATION = [
   {
     path: '/tariffs',
     name: 'Тарифы'
-  },
-  {
-    path: '/deposits',
-    name: 'Счета'
   }
 ]
 

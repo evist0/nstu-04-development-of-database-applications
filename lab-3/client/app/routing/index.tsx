@@ -9,7 +9,6 @@ import { UnauthenticatedRoot } from './unauthenticated-root'
 
 const UsersPage = loadable(() => import('/client/pages/users'))
 const TariffsPage = loadable(() => import('/client/pages/tariffs'))
-const DepositsPage = loadable(() => import('/client/pages/deposits'))
 
 const SignInPage = loadable(() => import('/client/pages/authentication/sign-in'))
 
@@ -31,10 +30,6 @@ const routes: RouteObject[] = [
       {
         path: 'tariffs',
         element: <TariffsPage />
-      },
-      {
-        path: 'deposits',
-        element: <DepositsPage />
       }
     ]
   },
