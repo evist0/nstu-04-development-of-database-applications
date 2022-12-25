@@ -1,0 +1,1 @@
+export { TariffRemoveButton } from './ui'
